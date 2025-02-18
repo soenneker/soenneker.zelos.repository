@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Soenneker.Documents.Document;
 using Soenneker.Dtos.IdNamePair;
 using Soenneker.Enums.JsonOptions;
+using Soenneker.Extensions.Enumerable;
 using Soenneker.Extensions.ValueTask;
 using Soenneker.Utils.Json;
 using Soenneker.Utils.Method;
@@ -59,6 +60,28 @@ public class ZelosRepository<TDocument> : IZelosRepository<TDocument> where TDoc
             return null;
 
         return JsonUtil.Deserialize<TDocument>(item);
+    }
+
+    public async ValueTask<List<TDocument>?> GetAll(CancellationToken cancellationToken = default)
+    {
+        IZelosContainer container = await _zelosContainerUtil.Get(DatabaseFilePath, ContainerName, cancellationToken).NoSync();
+
+        List<string> items = container.GetAllItems();
+
+        if (items.Empty())
+            return null;
+
+        var list = new List<TDocument>(items.Count);
+
+        foreach (string item in items)
+        {
+            var document = JsonUtil.Deserialize<TDocument>(item);
+
+            if (document != null)
+                list.Add(document);
+        }
+
+        return list;
     }
 
     public ValueTask<TDocument?> GetItemByIdNamePair(IdNamePair idNamePair, CancellationToken cancellationToken = default)
