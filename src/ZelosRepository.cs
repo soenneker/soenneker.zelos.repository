@@ -45,12 +45,19 @@ public class ZelosRepository<TDocument> : IZelosRepository<TDocument> where TDoc
         return container.BuildQueryable<T>();
     }
 
+    public List<T> GetItems<T>(IQueryable<T> queryable)
+    {
+        if (_log)
+            Logger.LogDebug("-- ZELOS: {method} ({type})", MethodUtil.Get(), typeof(T).Name);
+
+        // We're just materializing it here because the IQueryable has already been built via the container
+        return queryable.ToList();
+    }
+
     public async ValueTask<TDocument?> GetItem(string id, CancellationToken cancellationToken = default)
     {
         if (_log)
-        {
             Logger.LogDebug("-- ZELOS: {method} ({type}): {id}", MethodUtil.Get(), typeof(TDocument).Name, id);
-        }
 
         IZelosContainer container = await _zelosContainerUtil.Get(DatabaseFilePath, ContainerName, cancellationToken).NoSync();
 
@@ -73,8 +80,9 @@ public class ZelosRepository<TDocument> : IZelosRepository<TDocument> where TDoc
 
         var list = new List<TDocument>(items.Count);
 
-        foreach (string item in items)
+        for (var i = 0; i < items.Count; i++)
         {
+            string item = items[i];
             var document = JsonUtil.Deserialize<TDocument>(item);
 
             if (document != null)
@@ -160,8 +168,9 @@ public class ZelosRepository<TDocument> : IZelosRepository<TDocument> where TDoc
 
         IZelosContainer container = await _zelosContainerUtil.Get(DatabaseFilePath, ContainerName, cancellationToken).NoSync();
 
-        foreach (TDocument document in documents)
+        for (var i = 0; i < documents.Count; i++)
         {
+            TDocument document = documents[i];
             string? docSerialized = JsonUtil.Serialize(document);
 
             if (docSerialized == null)
