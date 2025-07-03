@@ -18,7 +18,7 @@ using Soenneker.Zelos.Repository.Abstract;
 
 namespace Soenneker.Zelos.Repository;
 
-public class ZelosRepository<TDocument> : IZelosRepository<TDocument> where TDocument : Document
+public sealed class ZelosRepository<TDocument> : IZelosRepository<TDocument> where TDocument : Document
 {
     private readonly IZelosContainerUtil _zelosContainerUtil;
 
