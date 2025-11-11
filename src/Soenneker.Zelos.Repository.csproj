@@ -42,7 +42,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0" />
-        <PackageReference Include="Soenneker.Documents.Document" Version="4.0.2560" />
+        <PackageReference Include="Soenneker.Documents.Document" Version="4.0.2561" />
         <PackageReference Include="Soenneker.Dtos.IdNamePair" Version="4.0.685" />
         <PackageReference Include="Soenneker.Extensions.Configuration" Version="4.0.734" />
         <PackageReference Include="Soenneker.Utils.Method" Version="4.0.441" />
