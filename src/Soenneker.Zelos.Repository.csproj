@@ -44,7 +44,7 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.1" />
         <PackageReference Include="Soenneker.Documents.Document" Version="4.0.2567" />
         <PackageReference Include="Soenneker.Dtos.IdNamePair" Version="4.0.687" />
-        <PackageReference Include="Soenneker.Extensions.Configuration" Version="4.0.742" />
+        <PackageReference Include="Soenneker.Extensions.Configuration" Version="4.0.743" />
         <PackageReference Include="Soenneker.Utils.Method" Version="4.0.442" />
         <PackageReference Include="Soenneker.Zelos.Container.Util" Version="4.0.326" />
     </ItemGroup>
