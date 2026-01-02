@@ -14,7 +14,7 @@
         <AssemblyName>Soenneker.Zelos.Repository</AssemblyName>
         <PackageId>Soenneker.Zelos.Repository</PackageId>
         <PackageTags>zelos repository file based json document db nosql container database zelosrepository util csharp dotnet c# .net</PackageTags>
-        <Copyright>Copyright © 2025 Jake Soenneker</Copyright>
+        <Copyright>Copyright © 2025-2026 Jake Soenneker</Copyright>
         <Authors>Jake Soenneker</Authors>
         <Company>https://soenneker.com</Company>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
