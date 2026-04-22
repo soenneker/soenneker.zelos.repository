@@ -31,10 +31,5 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\Soenneker.Zelos.Repository\Soenneker.Zelos.Repository.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-        <Content Include="testconfig.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-    </ItemGroup>
 </Project>
+
