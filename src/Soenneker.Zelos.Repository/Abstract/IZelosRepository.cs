@@ -29,8 +29,19 @@ public interface IZelosRepository<TDocument> where TDocument : Document
     /// <returns>The requested document or null if not found.</returns>
     ValueTask<TDocument?> GetItem(string id, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Gets items.
+    /// </summary>
+    /// <typeparam name="T">The T type.</typeparam>
+    /// <param name="queryable">The queryable.</param>
+    /// <returns>The result of the operation.</returns>
     List<T> GetItems<T>(IQueryable<T> queryable);
 
+    /// <summary>
+    /// Gets all.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task containing the result of the operation.</returns>
     ValueTask<List<TDocument>?> GetAll(CancellationToken cancellationToken = default);
 
     /// <summary>
