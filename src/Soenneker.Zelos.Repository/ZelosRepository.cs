@@ -48,7 +48,7 @@ public class ZelosRepository<TDocument> : IZelosRepository<TDocument> where TDoc
 
     public List<T> GetItems<T>(IQueryable<T> queryable)
     {
-        if (_log)
+        if (_log && Logger.IsEnabled(LogLevel.Debug))
             Logger.LogDebug("-- ZELOS: {method} ({type})", MethodUtil.Get(), typeof(T).Name);
 
         // We're just materializing it here because the IQueryable has already been built via the container
@@ -57,7 +57,7 @@ public class ZelosRepository<TDocument> : IZelosRepository<TDocument> where TDoc
 
     public async ValueTask<TDocument?> GetItem(string id, CancellationToken cancellationToken = default)
     {
-        if (_log)
+        if (_log && Logger.IsEnabled(LogLevel.Debug))
             Logger.LogDebug("-- ZELOS: {method} ({type}): {id}", MethodUtil.Get(), typeof(TDocument).Name, id);
 
         IZelosContainer container = await _zelosContainerUtil.Get(DatabaseFilePath, ContainerName, cancellationToken).NoSync();
@@ -100,7 +100,7 @@ public class ZelosRepository<TDocument> : IZelosRepository<TDocument> where TDoc
 
     public virtual async ValueTask<string> AddItem(TDocument document, CancellationToken cancellationToken = default)
     {
-        if (_log)
+        if (_log && Logger.IsEnabled(LogLevel.Debug))
         {
             string? serialized = JsonUtil.Serialize(document, JsonOptionType.Pretty);
             Logger.LogDebug("-- ZELOS: {method} ({type}): {document}", MethodUtil.Get(), typeof(TDocument).Name, serialized);
@@ -120,7 +120,7 @@ public class ZelosRepository<TDocument> : IZelosRepository<TDocument> where TDoc
 
     public virtual async ValueTask<List<TDocument>> AddItems(List<TDocument> documents, CancellationToken cancellationToken = default)
     {
-        if (_log)
+        if (_log && Logger.IsEnabled(LogLevel.Debug))
         {
             Logger.LogDebug("-- COSMOS: {method} ({type})", MethodUtil.Get(), typeof(TDocument).Name);
         }
