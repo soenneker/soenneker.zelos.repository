@@ -32,16 +32,16 @@ public interface IZelosRepository<TDocument> where TDocument : Document
     /// <summary>
     /// Gets items.
     /// </summary>
-    /// <typeparam name="T">The T type.</typeparam>
-    /// <param name="queryable">The queryable.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <typeparam name="T">Type of value handled by the Zelos Repository.</typeparam>
+    /// <param name="queryable">Queryable for the get items operation.</param>
+    /// <returns>The requested collection.</returns>
     List<T> GetItems<T>(IQueryable<T> queryable);
 
     /// <summary>
     /// Gets all.
     /// </summary>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task containing the result of the operation.</returns>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
+    /// <returns>A task whose result is the collection returned by get All.</returns>
     ValueTask<List<TDocument>?> GetAll(CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -87,13 +87,15 @@ public interface IZelosRepository<TDocument> where TDocument : Document
     /// <summary>
     /// Deletes a document from the repository by its ID.
     /// </summary>
-    /// <param name="id">The ID of the document to delete.</param>
+    /// <param name="id">Identifier of the Zelos Repository instance or registration to target.</param>
     /// <param name="cancellationToken">Token to monitor for cancellation requests.</param>
+    /// <returns>A task that completes after the targeted files have been deleted.</returns>
     ValueTask DeleteItem(string id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Deletes all documents from the repository.
     /// </summary>
     /// <param name="cancellationToken">Token to monitor for cancellation requests.</param>
+    /// <returns>A task that completes after the targeted files have been deleted.</returns>
     ValueTask DeleteAll(CancellationToken cancellationToken = default);
 }
