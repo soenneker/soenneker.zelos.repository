@@ -46,7 +46,7 @@
     <ItemGroup>
         <PackageReference Include="Soenneker.Documents.Document" Version="4.0.2700" />
         <PackageReference Include="Soenneker.Dtos.IdNamePair" Version="4.0.724" />
-        <PackageReference Include="Soenneker.Extensions.Configuration" Version="4.0.868" />
+        <PackageReference Include="Soenneker.Extensions.Configuration" Version="4.0.869" />
         <PackageReference Include="Soenneker.Utils.Method" Version="4.0.460" />
         <PackageReference Include="Soenneker.Zelos.Container.Util" Version="4.0.574" />
     </ItemGroup>
