@@ -142,7 +142,7 @@ public class ZelosRepository<TDocument> : IZelosRepository<TDocument> where TDoc
 
     public virtual async ValueTask<string> UpdateItem(TDocument document, CancellationToken cancellationToken = default)
     {
-        if (_log)
+        if (_log && Logger.IsEnabled(LogLevel.Debug))
         {
             string? serialized = JsonUtil.Serialize(document, JsonOptionType.Pretty);
             Logger.LogDebug("-- ZELOS: {method} ({type}): {document}", MethodUtil.Get(), typeof(TDocument).Name, serialized);
@@ -162,7 +162,7 @@ public class ZelosRepository<TDocument> : IZelosRepository<TDocument> where TDoc
 
     public virtual async ValueTask<List<TDocument>> UpdateItems(List<TDocument> documents, CancellationToken cancellationToken = default)
     {
-        if (_log)
+        if (_log && Logger.IsEnabled(LogLevel.Debug))
         {
             Logger.LogDebug("-- COSMOS: {method} ({type})", MethodUtil.Get(), typeof(TDocument).Name);
         }
