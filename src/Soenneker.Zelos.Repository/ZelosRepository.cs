@@ -1,4 +1,6 @@
-﻿using System;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -18,9 +20,13 @@ using Soenneker.Zelos.Repository.Abstract;
 
 namespace Soenneker.Zelos.Repository;
 
-/// <inheritdoc cref="IZelosRepository{TDocument}"/>
 public class ZelosRepository<TDocument> : IZelosRepository<TDocument> where TDocument : Document
 {
+    private readonly JsonSerializerContext _jsonContext;
+
+    private JsonTypeInfo<TJson> GetJsonTypeInfo<TJson>() =>
+        (JsonTypeInfo<TJson>)(_jsonContext.GetTypeInfo(typeof(TJson)) ?? throw new System.NotSupportedException($"No generated JSON metadata for {typeof(TJson)}."));
+
     private readonly IZelosContainerUtil _zelosContainerUtil;
 
     protected ILogger<ZelosRepository<TDocument>> Logger { get; }
@@ -31,8 +37,9 @@ public class ZelosRepository<TDocument> : IZelosRepository<TDocument> where TDoc
 
     protected string DatabaseFilePath { get; set; }
 
-    public ZelosRepository(IConfiguration config, ILogger<ZelosRepository<TDocument>> logger, IZelosContainerUtil zelosContainerUtil)
+    public ZelosRepository(JsonSerializerContext jsonContext, IConfiguration config, ILogger<ZelosRepository<TDocument>> logger, IZelosContainerUtil zelosContainerUtil)
     {
+        _jsonContext = jsonContext ?? throw new System.ArgumentNullException(nameof(jsonContext));
         _zelosContainerUtil = zelosContainerUtil;
         Logger = logger;
 
@@ -43,7 +50,7 @@ public class ZelosRepository<TDocument> : IZelosRepository<TDocument> where TDoc
     {
         IZelosContainer container = await _zelosContainerUtil.Get(DatabaseFilePath, ContainerName, cancellationToken).NoSync();
 
-        return container.BuildQueryable<T>();
+        return container.BuildQueryable(GetJsonTypeInfo<T>());
     }
 
     public List<T> GetItems<T>(IQueryable<T> queryable)
@@ -67,7 +74,7 @@ public class ZelosRepository<TDocument> : IZelosRepository<TDocument> where TDoc
         if (item == null)
             return null;
 
-        return JsonUtil.Deserialize<TDocument>(item);
+        return JsonUtil.Deserialize<TDocument>(item, GetJsonTypeInfo<TDocument>());
     }
 
     public async ValueTask<List<TDocument>?> GetAll(CancellationToken cancellationToken = default)
@@ -84,7 +91,7 @@ public class ZelosRepository<TDocument> : IZelosRepository<TDocument> where TDoc
         for (var i = 0; i < items.Count; i++)
         {
             string item = items[i];
-            var document = JsonUtil.Deserialize<TDocument>(item);
+            var document = JsonUtil.Deserialize<TDocument>(item, GetJsonTypeInfo<TDocument>());
 
             if (document != null)
                 list.Add(document);
@@ -102,13 +109,13 @@ public class ZelosRepository<TDocument> : IZelosRepository<TDocument> where TDoc
     {
         if (_log && Logger.IsEnabled(LogLevel.Debug))
         {
-            string? serialized = JsonUtil.Serialize(document, JsonOptionType.Pretty);
+            string? serialized = JsonUtil.Serialize(document, GetJsonTypeInfo<TDocument>());
             Logger.LogDebug("-- ZELOS: {method} ({type}): {document}", MethodUtil.Get(), typeof(TDocument).Name, serialized);
         }
 
         IZelosContainer container = await _zelosContainerUtil.Get(DatabaseFilePath, ContainerName, cancellationToken).NoSync();
 
-        string? docSerialized = JsonUtil.Serialize(document);
+        string? docSerialized = JsonUtil.Serialize(document, GetJsonTypeInfo<TDocument>());
 
         if (docSerialized == null)
             throw new Exception("Failed to serialize document");
@@ -129,7 +136,7 @@ public class ZelosRepository<TDocument> : IZelosRepository<TDocument> where TDoc
 
         foreach (TDocument document in documents)
         {
-            string? docSerialized = JsonUtil.Serialize(document);
+            string? docSerialized = JsonUtil.Serialize(document, GetJsonTypeInfo<TDocument>());
 
             if (docSerialized == null)
                 throw new Exception("Failed to serialize document");
@@ -144,13 +151,13 @@ public class ZelosRepository<TDocument> : IZelosRepository<TDocument> where TDoc
     {
         if (_log && Logger.IsEnabled(LogLevel.Debug))
         {
-            string? serialized = JsonUtil.Serialize(document, JsonOptionType.Pretty);
+            string? serialized = JsonUtil.Serialize(document, GetJsonTypeInfo<TDocument>());
             Logger.LogDebug("-- ZELOS: {method} ({type}): {document}", MethodUtil.Get(), typeof(TDocument).Name, serialized);
         }
 
         IZelosContainer container = await _zelosContainerUtil.Get(DatabaseFilePath, ContainerName, cancellationToken).NoSync();
 
-        string? docSerialized = JsonUtil.Serialize(document);
+        string? docSerialized = JsonUtil.Serialize(document, GetJsonTypeInfo<TDocument>());
 
         if (docSerialized == null)
             throw new Exception("Failed to serialize document");
@@ -172,7 +179,7 @@ public class ZelosRepository<TDocument> : IZelosRepository<TDocument> where TDoc
         for (var i = 0; i < documents.Count; i++)
         {
             TDocument document = documents[i];
-            string? docSerialized = JsonUtil.Serialize(document);
+            string? docSerialized = JsonUtil.Serialize(document, GetJsonTypeInfo<TDocument>());
 
             if (docSerialized == null)
                 throw new Exception("Failed to serialize document");
