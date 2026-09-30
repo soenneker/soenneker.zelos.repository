@@ -11,7 +11,6 @@ namespace Soenneker.Zelos.Repository.Abstract;
 /// A data persistence abstraction layer for Zelos DB
 /// </summary>
 /// <typeparam name="TDocument">The type of document being handled.</typeparam>
-/// <remarks>Register a source-generated JsonSerializerContext covering application payloads. JSON contracts are never discovered through reflection.</remarks>
 public interface IZelosRepository<TDocument> where TDocument : Document
 {
     /// <summary>
